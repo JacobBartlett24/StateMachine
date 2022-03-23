@@ -67,12 +67,18 @@ class stateMachine:
                 for var in splitElm:
                     machineStates.append(var)
 
+    def completedPath(self,state):
+        if state in finalStates:
+            return True
+        return False
+
     #Finds best path 
     def traverseMachine(self):
         currState = 'q0'
         possiblePaths = []
-        for elm in userInputs[0]:
-
+        print(userInputs[1])
+        for elm in userInputs[1]:
+            
             if elm not in machineInputs:
                 print('Error: input not in machine inputs')
 
@@ -82,16 +88,17 @@ class stateMachine:
                     if elm == item:
                         possiblePaths.append(innerList)
 
-            print(possiblePaths)
-
+            
+            #print(possiblePaths)
+            
             for i in range(len(possiblePaths)):
-                print('current state:',currState)
-                if possiblePaths[i][0] == currState:
-                    currState = possiblePaths[i][2]
-                    print(possiblePaths[i])
+                if elm == possiblePaths[i][1] and currState == possiblePaths[i][0]:
+                    currState = possiblePaths[i][2]    
                     
             
             possiblePaths.clear()
+            print(self.completedPath(currState))
+        
         
 #script that needs to be refactored into functions
 file = open('proj-1-machine.txt','r')
