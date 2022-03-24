@@ -1,7 +1,51 @@
 from operator import indexOf
 import re
 
+paths = []
+userInputs = []
+machineInputs = []
+finalStates = []
+machineStates = []
+
 class stateMachine:
+
+    def initializeFile(self,file):
+        machineString = ''
+        nestedStrings = set()
+        listOfSentences = file.readlines()
+        for elm in listOfSentences:
+            machineString += elm
+
+        for start in range(len(listOfSentences)):
+            string = machineString[start:]
+            nestedStrings.update(re.findall('\(.*?\)', string))
+
+        stateMachine0 = stateMachine()
+        stateMachine0.initializeMachine(nestedStrings)
+
+
+    #get the user input for file name
+    def userInput(self):
+
+        listOfInputs = []
+
+        #Get file input
+        fileName = input("Please input the file name: ")
+        openFile = open(fileName)
+        self.initializeFile(openFile)
+
+        userExit = True
+        str = ""
+        while(userExit):
+            userString = input("Please input a string: ")
+            if(userString == str):
+                userExit = False
+            else:
+                listOfInputs.append(self.traverseMachine(userString))
+                print(self.traverseMachine(userString))
+        print("Bye bye.")
+        print(listOfInputs)
+
 
     #elements of a state machine
     def __init__(self,paths,userInputs,machineInputs,machineStates,finalStates) -> None:
@@ -56,6 +100,7 @@ class stateMachine:
             #turns machine inputs into a list
             elif len(splitElm) == 2:
                 for var in splitElm:
+                    
                     machineInputs.append(var)
 
             #turns final states into a list
@@ -69,27 +114,20 @@ class stateMachine:
 
     def completedPath(self,state):
         if state in finalStates:
-            return True
-        return False
+            return "accepted"
+        return "rejected"
 
     #Finds best path 
-    def traverseMachine(self):
+    def traverseMachine(self,userInput):
         currState = 'q0'
         possiblePaths = []
-        print(userInputs[1])
-        for elm in userInputs[1]:
-            
-            if elm not in machineInputs:
-                print('Error: input not in machine inputs')
 
-            
+        for elm in userInput:
+
             for innerList in paths:
                 for item in innerList:
                     if elm == item:
                         possiblePaths.append(innerList)
-
-            
-            #print(possiblePaths)
             
             for i in range(len(possiblePaths)):
                 if elm == possiblePaths[i][1] and currState == possiblePaths[i][0]:
@@ -97,34 +135,10 @@ class stateMachine:
                     
             
             possiblePaths.clear()
-            print(self.completedPath(currState))
+        return self.completedPath(currState)
         
-        
-#script that needs to be refactored into functions
-file = open('proj-1-machine.txt','r')
-
-nestedStrings = set()
-listOfSentences = file.readlines()
-machineString = ''
-paths = []
-userInputs = []
-machineInputs = []
-finalStates = []
-machineStates = []
-
-#string of entire machine
-for elm in listOfSentences:
-    machineString += elm
-
-#nest strings into a set
-for start in range(len(listOfSentences)):
-    string = machineString[start:]
-    nestedStrings.update(re.findall('\(.*?\)', string))
-
-#script that needs to be put in state machine init
-stateMachine0 = stateMachine()
-stateMachine0.initializeMachine(nestedStrings)
-stateMachine0.traverseMachine()
+stateMachine1 = stateMachine()
+stateMachine1.userInput()
 
 
 
