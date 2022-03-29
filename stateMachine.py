@@ -9,12 +9,23 @@ machineStates = []
 
 class stateMachine:
 
+    iState = ''
+
     def initializeFile(self,file):
         machineString = ''
         nestedStrings = set()
         listOfSentences = file.readlines()
+
+        
         for elm in listOfSentences:
             machineString += elm
+
+            if "(" not in elm and self.getiState() == '':
+                f = elm
+                initial = f.strip()
+                initial = initial.rstrip(initial[-1])
+                self.setiState(initial)
+                print(self.getiState())
 
         for start in range(len(listOfSentences)):
             string = machineString[start:]
@@ -57,6 +68,12 @@ class stateMachine:
 
     def setPaths(self,paths):
         self.paths = paths
+
+    def setiState(self,iState):
+        self.iState = iState
+
+    def getiState(self):
+        return self.iState
     
     def __init__(self) -> None:
         pass
@@ -119,7 +136,7 @@ class stateMachine:
 
     #Finds best path 
     def traverseMachine(self,userInput):
-        currState = 'q0'
+        currState = self.getiState()
         possiblePaths = []
 
         for elm in userInput:
@@ -139,6 +156,5 @@ class stateMachine:
         
 stateMachine1 = stateMachine()
 stateMachine1.userInput()
-
 
 
